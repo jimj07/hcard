@@ -79,18 +79,19 @@ describe('app', () => {
          });
    });
 
-   it('should not response error when it is not development env', (done) => {
+   it('should response error with no details when it is not development env', (done) => {
       sandbox.stub(HcardStorage, 'factory').returns(mockHcardStorage);
 
       const updateFailedError = 'Update failed';
       sandbox.stub(mockHcardStorage, 'update').rejects(new Error(updateFailedError));
-      process.env.NODE_ENV = 'production';
       const server = require('../app');
+      server.set('env', 'production');
       request(server)
          .post('/update')
          .expect(500).end((err, res) => {
             expect(err).to.be.null;
             expect(res.text).to.contains(updateFailedError);
+            expect(res.text).to.contains('<pre></pre>');
             done();
          });
    });
