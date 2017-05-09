@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "nyc npm run spec",
+    "test": "cross-env SUPRESS_LOG=true nyc npm run spec",
     "lint": "./node_modules/.bin/eslint src test",
     "spec": "./node_modules/.bin/_mocha -R spec --recursive tests/**/*",
     "coverage": "nyc report --reporter=html"
@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "cross-env": "^4.0.0",
     "eslint": "^3.19.0",
     "mocha": "^3.3.0",
     "nyc": "^10.3.2",

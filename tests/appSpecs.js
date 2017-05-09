@@ -87,6 +87,8 @@ describe('app', () => {
 
       const getFailedError = 'Get failed';
       sandbox.stub(mockHcardStorage, 'get').rejects(new Error(getFailedError));
+
+      process.env.SUPRESS_LOG = 'false';
       const server = require('../app');
       server.set('env', 'production');
       request(server)
@@ -95,6 +97,7 @@ describe('app', () => {
             expect(err).to.be.null;
             expect(res.text).to.contains(getFailedError);
             expect(res.text).to.contains('<pre></pre>');
+            process.env.SUPRESS_LOG = 'true';
             done();
          });
    });

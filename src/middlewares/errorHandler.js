@@ -1,6 +1,8 @@
 'use strict';
 module.exports = (err, req, res, next) => {
-   console.error(err);
+   if (process.env.SUPRESS_LOG !== 'true') {
+      console.error(err);
+   }
 
    // set locals, only providing error in development
    res.locals.message = err.message;
