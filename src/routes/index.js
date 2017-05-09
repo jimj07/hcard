@@ -13,13 +13,12 @@ const hcardFactory = React.createFactory(Hcard);
 router.get('/', function (req, res, next) {
    hcardStorage
       .get()
-      .then((hcardProps) => {
-         const hcardElement = hcardFactory(hcardProps);
+      .then((hcard) => {
+         const hcardElement = hcardFactory(hcard.get());
          const renderedHcard = ReactDOMServer.renderToString(hcardElement);
-         const hcardStr = hcardProps ? JSON.stringify(hcardProps) : 'undefined';
          const model = {
             hcard: renderedHcard,
-            hcardProps: hcardStr
+            hcardProps: hcard.toString()
          };
          res.render('index', model);
       })

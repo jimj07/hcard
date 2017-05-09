@@ -1,6 +1,6 @@
 'use strict';
 const util = require('util');
-const hcardSchema = require('../store/hcardSchema');
+const hcardSchema = require('../models/hcardSchema');
 module.exports = (req, res, next) => {
    req.checkBody(hcardSchema);
    req.getValidationResult().then((result) => {

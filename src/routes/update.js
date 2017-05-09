@@ -8,7 +8,10 @@ const hcardStorage = HcardStorage();
 router.use(validator);
 router.post('/', function (req, res, next) {
    const hcardField = req.body;
-   hcardStorage.update(hcardField).then(() => {
+   hcardStorage.get().then((hcard) => {
+      hcard.set(hcardField);
+      return hcardStorage.save(hcard);
+   }).then(() => {
       res.end();
    }).catch((err) => {
       next(err);

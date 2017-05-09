@@ -4,6 +4,7 @@ const request = require('supertest');
 const sinon = require('sinon');
 const HcardStorage = require('../src/store/hcardStorage');
 const mockHcardStorage = require('./mockHcardStorage');
+const Hcard = require('../src/models/hcard');
 
 describe('app', () => {
    let sandbox;
@@ -35,7 +36,9 @@ describe('app', () => {
       sandbox.stub(HcardStorage, 'factory').returns(mockHcardStorage);
 
       const updateFailedError = 'Update failed';
-      sandbox.stub(mockHcardStorage, 'update').rejects(new Error(updateFailedError));
+      
+      sandbox.stub(mockHcardStorage, 'get').resolves(Hcard());
+      sandbox.stub(mockHcardStorage, 'save').rejects(new Error(updateFailedError));
 
       const server = require('../app');
       request(server)
@@ -82,15 +85,15 @@ describe('app', () => {
    it('should response error with no details when it is not development env', (done) => {
       sandbox.stub(HcardStorage, 'factory').returns(mockHcardStorage);
 
-      const updateFailedError = 'Update failed';
-      sandbox.stub(mockHcardStorage, 'update').rejects(new Error(updateFailedError));
+      const getFailedError = 'Get failed';
+      sandbox.stub(mockHcardStorage, 'get').rejects(new Error(getFailedError));
       const server = require('../app');
       server.set('env', 'production');
       request(server)
-         .post('/update')
+         .get('/')
          .expect(500).end((err, res) => {
             expect(err).to.be.null;
-            expect(res.text).to.contains(updateFailedError);
+            expect(res.text).to.contains(getFailedError);
             expect(res.text).to.contains('<pre></pre>');
             done();
          });
